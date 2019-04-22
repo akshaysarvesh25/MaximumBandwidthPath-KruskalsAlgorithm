@@ -7,10 +7,12 @@
 #include <time.h>
 #include <random>
 #include<algorithm>
+#include <iomanip>
+#include <fstream>
 
 using namespace std;
 
-#define OUTPUT_LOG 1
+#define OUTPUT_LOG 0
 
 typedef struct
 {
@@ -217,5 +219,330 @@ class Heap{
     }
 
 
+
+};
+
+
+
+
+#define NUMBER_OF_VERTICES 5000
+#define NUMBER_OF_EDGES_PER_VERTEX_AVG 6
+#define PERCENTAGE_VERTICES_NEIGHBORS 1000
+
+#define INSERT_DEBUG_OUTPUT 0
+#define DISPLAY_DEBUG_OUTPUT 1
+
+using namespace std;
+
+typedef enum
+{
+  STATUS_NONE = 0,
+  STATUS_GRAPH_UNSEEN = 1,
+  STATUS_GRAPH_FRINGE = 2,
+  STATUS_GRAPH_INTREE = 3,
+}NODE_STATUS;
+
+
+typedef struct
+{
+  unsigned int NodeName;
+  unsigned int NodeWeight;
+}NodeAttributes;
+
+template <class T>
+struct SingleLinkedListNode{
+  T data;
+  T weight;
+  NODE_STATUS NodeStatus;
+  T Bandwidth;
+  T dad;
+  SingleLinkedListNode *NextNode;
+
+  SingleLinkedListNode(){
+
+
+  }
+
+  SingleLinkedListNode(T val){
+
+    this->data = val;
+  }
+
+  SingleLinkedListNode(T val,SingleLinkedListNode<T> NewNode){
+
+    this->data = val;
+    this->NextNode = NewNode;
+  }
+
+
+};
+
+
+
+
+template <class T>
+class LinkedList{
+
+  private:
+    SingleLinkedListNode<T> *root, *tail;
+
+  public:
+    void insert(T val,T EdgeWeight)
+    {
+
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode->data=val;
+      tempNode->weight = EdgeWeight;
+      tempNode->NodeStatus = STATUS_NONE;
+      tempNode->NextNode=NULL;
+
+      if(root)
+      {
+        #if INSERT_DEBUG_OUTPUT
+        cout<<"Adding new elements "<<endl;
+        #endif
+        tail->NextNode=tempNode;
+        tail=tempNode;
+      }
+      else
+      {
+        root=tempNode;
+        tail=tempNode;
+        tempNode=NULL;
+        #if INSERT_DEBUG_OUTPUT
+        cout<<"New root added : "<<val<<endl;
+        #endif
+      }
+
+    }
+
+    void display()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      unsigned int i=0;
+      //cout<<"\n"<<endl;
+      while(tempNode!=NULL)
+      {
+        cout<<tempNode->data<<" -> ";
+        tempNode=tempNode->NextNode;
+      }
+      cout<<"\n";
+    }
+
+    void MakeNodesUnseen()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      unsigned int i=0;
+      //cout<<"\n"<<endl;
+        //cout<<tempNode->data<<" -> ";
+      tempNode->NodeStatus = STATUS_GRAPH_UNSEEN;
+      tempNode=tempNode->NextNode;
+
+    }
+
+    void MakeNodesIntree()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      unsigned int i=0;
+      tempNode->NodeStatus = STATUS_GRAPH_INTREE;
+    }
+
+    void MakeNodesFringe()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      unsigned int i=0;
+      tempNode->NodeStatus = STATUS_GRAPH_FRINGE;
+    }
+
+    void SetNodeBandwidth(T BWvalue)
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+
+      //cout<<tempNode->data<<" -> ";
+      tempNode->Bandwidth = BWvalue;
+
+    }
+
+    std::vector<int> GetAdjacentNodes()
+    {
+      std::vector<int> temp;
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      #if OUTPUT_LOG
+      cout<<"Adjacent nodes : "<<endl;
+      #endif
+      while(tempNode!=NULL)
+      {
+        temp.push_back(tempNode->data);
+        #if OUTPUT_LOG
+        cout<<tempNode->data<<endl;
+        #endif
+        tempNode=tempNode->NextNode;
+      }
+
+      return temp;
+    }
+
+    std::vector<int> GetAdjacentNodesWithout(int NodeName)
+    {
+      std::vector<int> temp;
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      #if OUTPUT_LOG
+      cout<<"Adjacent nodes : "<<endl;
+      #endif
+      while(tempNode!=NULL)
+      {
+        if(tempNode->data!=NodeName)
+        {
+          temp.push_back(tempNode->data);
+          cout<<tempNode->data<<endl;
+        }
+
+        tempNode=tempNode->NextNode;
+      }
+
+      return temp;
+    }
+
+    std::vector<int> GetAdjacentNodesWeights()
+    {
+      std::vector<int> temp;
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+
+      while(tempNode!=NULL)
+      {
+        temp.push_back(tempNode->weight);
+        tempNode=tempNode->NextNode;
+      }
+
+      return temp;
+    }
+
+    void SetDad(int dadval)
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      tempNode->dad = dadval;
+    }
+
+    void GetDad()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      #if OUTPUT_LOG
+      cout<<"dad of : "<<tempNode->data<<" is : "<<tempNode->dad<<endl;
+      #endif
+    }
+
+    void ViewNodeStatus()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      #if OUTPUT_LOG
+      cout<<"Node status of : "<<tempNode->data<<" is : "<<tempNode->NodeStatus<<"\n";
+      cout<<"Node Bandwidth of : "<<tempNode->data<<" is : "<<tempNode->Bandwidth<<"\n";
+      #endif
+    }
+
+    bool IsNodeUnseen()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+
+      if(tempNode->NodeStatus == STATUS_GRAPH_UNSEEN)
+      {
+        return true;
+      }
+
+      else
+      {
+        return false;
+      }
+
+    }
+
+
+    bool IsNodeFringe()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+
+      if(tempNode->NodeStatus == STATUS_GRAPH_FRINGE)
+      {
+        return true;
+      }
+
+      else
+      {
+        return false;
+      }
+
+    }
+
+    T GetBandWidth()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      return tempNode->Bandwidth;
+    }
+
+    T GetWeightOfAdjNode(T val)
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+
+      while((tempNode!=NULL))
+      {
+        if(tempNode->data == val)
+        {
+          return tempNode->weight;
+        }
+        tempNode=tempNode->NextNode;
+      }
+
+      return 99999;
+    }
+
+    T GetWeight()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      return tempNode->weight;
+    }
+
+    T DisplayDadNodes()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+
+      //cout<<tempNode->dad<<" -> ";
+      //tempNode=tempNode->NextNode;
+
+      return tempNode->dad;
+    }
+
+    int count()
+    {
+      SingleLinkedListNode<T> *tempNode=new SingleLinkedListNode<T>;
+      tempNode=this->root;
+      unsigned int count=0;
+      //cout<<"\n"<<endl;
+      while(tempNode!=NULL)
+      {
+        count = count+1;
+        tempNode=tempNode->NextNode;
+      }
+      //cout<<count<<"\n";
+
+      return count;
+
+    }
 
 };
