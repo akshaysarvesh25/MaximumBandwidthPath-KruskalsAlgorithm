@@ -15,7 +15,7 @@ int main()
   /* Creating graphs of 5000 nodes as an adjacency list */
   LinkedList<int> *Graph_1 = new LinkedList<int>[NUMBER_OF_VERTICES];
 
-  srand(42);
+  srand(time(0));
   /* Construct a cycle of connected nodes */
   for(unsigned int i = 0;i<NUMBER_OF_VERTICES;i++)
   {
@@ -81,6 +81,7 @@ int main()
   {
     int u = Heap2->MaxEdge();
     int v = Heap2->MaxEdge2();
+    int weight = Heap2->MaxWeight();
 
     int set_u = ds.find(u);
     int set_v = ds.find(v);
@@ -89,7 +90,7 @@ int main()
             // Current edge will be in the MST
             // so print it
        cout << u << " - " << v << endl;
-       MaxSpTree.addEdge(u,v);
+       MaxSpTree.addEdge(u,v,weight);
 
           // Update MST weight
        //mst_wt += it->first;
@@ -98,7 +99,8 @@ int main()
     Heap2->Delete(0);
   }
 
-
+//MaxSpTree.DFS(68,1549);
+ MaxSpTree.DFS(68,4509);
 
 
 
