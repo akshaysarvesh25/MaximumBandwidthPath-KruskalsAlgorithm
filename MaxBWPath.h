@@ -548,43 +548,6 @@ class LinkedList{
 
 };
 
-/*
-typedef struct
-{
-  int rank;
-  DisjointSet parent;
-}DisjointSet;
-
-void MakeSet(DisjointSet v)
-{
-  v.parent = -1;
-  v.rank = 0;
-  //cout<<__func__<<endl;
-}
-
-DisjointSet Find(DisjointSet v)
-{
-  DisjointSet w = v;
-  stack <DisjointSet> k;
-
-  while(w.parent != -1)
-  {
-    k.push(w);
-    w = w.parent;
-  }
-
-  while(!k.empty())
-  {
-    DisjointSet u = k.top();
-    k.pop();
-    u.parent = w;
-  }
-
-  return w;
-
-
-}
-*/
 
 // To represent Disjoint Sets
 struct DisjointSets

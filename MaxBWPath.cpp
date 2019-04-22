@@ -5,6 +5,7 @@
 *******************************************************************************/
 
 #include <MaxBWPath.h>
+#include <MaxBWPathUtils.h>
 
 
 
@@ -74,6 +75,8 @@ int main()
     MakeSet(Set1[nodes]);
   }*/
 
+  Graph MaxSpTree(NUMBER_OF_VERTICES);
+
   while(Heap2->SizeOfHeapIsZero()!=0)
   {
     int u = Heap2->MaxEdge();
@@ -86,6 +89,7 @@ int main()
             // Current edge will be in the MST
             // so print it
        cout << u << " - " << v << endl;
+       MaxSpTree.addEdge(u,v);
 
           // Update MST weight
        //mst_wt += it->first;
