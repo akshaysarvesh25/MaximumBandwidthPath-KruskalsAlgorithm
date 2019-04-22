@@ -9,6 +9,7 @@
 #include<algorithm>
 #include <iomanip>
 #include <fstream>
+#include<stack>
 
 using namespace std;
 
@@ -545,4 +546,95 @@ class LinkedList{
 
     }
 
+};
+
+/*
+typedef struct
+{
+  int rank;
+  DisjointSet parent;
+}DisjointSet;
+
+void MakeSet(DisjointSet v)
+{
+  v.parent = -1;
+  v.rank = 0;
+  //cout<<__func__<<endl;
+}
+
+DisjointSet Find(DisjointSet v)
+{
+  DisjointSet w = v;
+  stack <DisjointSet> k;
+
+  while(w.parent != -1)
+  {
+    k.push(w);
+    w = w.parent;
+  }
+
+  while(!k.empty())
+  {
+    DisjointSet u = k.top();
+    k.pop();
+    u.parent = w;
+  }
+
+  return w;
+
+
+}
+*/
+
+// To represent Disjoint Sets
+struct DisjointSets
+{
+    int *parent, *rnk;
+    int n;
+
+    // Constructor.
+    DisjointSets(int n)
+    {
+        // Allocate memory
+        this->n = n;
+        parent = new int[n+1];
+        rnk = new int[n+1];
+
+        // Initially, all vertices are in
+        // different sets and have rank 0.
+        for (int i = 0; i <= n; i++)
+        {
+            rnk[i] = 0;
+
+            //every element is parent of itself
+            parent[i] = i;
+        }
+    }
+
+    // Find the parent of a node 'u'
+    // Path Compression
+    int find(int u)
+    {
+        /* Make the parent of the nodes in the path
+           from u--> parent[u] point to parent[u] */
+        if (u != parent[u])
+            parent[u] = find(parent[u]);
+        return parent[u];
+    }
+
+    // Union by rank
+    void merge(int x, int y)
+    {
+        x = find(x), y = find(y);
+
+        /* Make tree with smaller height
+           a subtree of the other tree  */
+        if (rnk[x] > rnk[y])
+            parent[y] = x;
+        else // If rnk[x] <= rnk[y]
+            parent[x] = y;
+
+        if (rnk[x] == rnk[y])
+            rnk[y]++;
+    }
 };

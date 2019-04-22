@@ -7,20 +7,10 @@
 #include <MaxBWPath.h>
 
 
+
+
 int main()
 {
-  Heap<int> *Heap1 = new Heap<int>();
-
-  Heap1->Insert(1,2,3);
-  Heap1->Insert(4,5,6);
-  Heap1->Insert(7,8,9);
-  Heap1->Delete(0);
-  Heap1->print();
-
-
-
-  cout<<"Maximum edge : "<<Heap1->MaxEdge()<<" "<<Heap1->MaxEdge2()<<endl;
-
   /* Creating graphs of 5000 nodes as an adjacency list */
   LinkedList<int> *Graph_1 = new LinkedList<int>[NUMBER_OF_VERTICES];
 
@@ -73,7 +63,39 @@ int main()
     }
   }
 
-  
+  cout<<"Maximum edge : "<<Heap2->MaxEdge()<<" "<<Heap2->MaxEdge2()<<" "<<Heap2->MaxWeight()<<endl;
+
+  //DisjointSet *Set1 = new DisjointSet[NUMBER_OF_VERTICES];
+  DisjointSets ds(NUMBER_OF_VERTICES);
+
+  /* Run makeset on all nodes
+  for(unsigned int nodes = 0; nodes<NUMBER_OF_VERTICES;nodes++)
+  {
+    MakeSet(Set1[nodes]);
+  }*/
+
+  while(Heap2->SizeOfHeapIsZero()!=0)
+  {
+    int u = Heap2->MaxEdge();
+    int v = Heap2->MaxEdge2();
+
+    int set_u = ds.find(u);
+    int set_v = ds.find(v);
+    if (set_u != set_v)
+    {
+            // Current edge will be in the MST
+            // so print it
+       cout << u << " - " << v << endl;
+
+          // Update MST weight
+       //mst_wt += it->first;
+      ds.merge(set_u, set_v);
+    }
+    Heap2->Delete(0);
+  }
+
+
+
 
 
 
