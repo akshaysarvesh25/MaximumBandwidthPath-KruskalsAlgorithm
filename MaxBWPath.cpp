@@ -12,10 +12,11 @@
 
 int main()
 {
+  long time1 = getMicrotime();
   /* Creating graphs of 5000 nodes as an adjacency list */
   LinkedList<int> *Graph_1 = new LinkedList<int>[NUMBER_OF_VERTICES];
 
-  srand(time(0));
+  srand(42);
   /* Construct a cycle of connected nodes */
   for(unsigned int i = 0;i<NUMBER_OF_VERTICES;i++)
   {
@@ -76,12 +77,14 @@ int main()
   }*/
 
   Graph MaxSpTree(NUMBER_OF_VERTICES);
-
+  std::vector<int> vecu,vecv;
   while(Heap2->SizeOfHeapIsZero()!=0)
   {
     int u = Heap2->MaxEdge();
     int v = Heap2->MaxEdge2();
     int weight = Heap2->MaxWeight();
+
+
 
     int set_u = ds.find(u);
     int set_v = ds.find(v);
@@ -89,7 +92,9 @@ int main()
     {
             // Current edge will be in the MST
             // so print it
-       cout << u << " - " << v << endl;
+            vecu.push_back(set_u);
+            vecv.push_back(set_v);
+       //cout << u << " - " << v << endl;
        MaxSpTree.addEdge(u,v,weight);
 
           // Update MST weight
@@ -99,8 +104,39 @@ int main()
     Heap2->Delete(0);
   }
 
-//MaxSpTree.DFS(68,1549);
- MaxSpTree.DFS(68,4509);
+ MaxSpTree.DFS(68,1549);
+ //MaxSpTree.DFS(68,4509);
+ int dest = 99;
+ int src = 0;
+ //while(ds.parent[dest]!=src)
+ long time2 = getMicrotime();
+ cout<<"Total execution time : "<<(time2-time1)*1e-6<<endl;
+
+   //dest = ds.parent[dest];
+
+ //}
+
+ std::remove("UData.txt");
+  std::remove("VData.txt");
+  std::ofstream outfile_TS1;
+
+  outfile_TS1.open("UData.txt", std::ios_base::app);
+  for(unsigned int i = 0;i<vecu.size();i++)
+  {
+    outfile_TS1<<std::setprecision(20)<<vecu[i]<< std::endl;
+    //std::cout<<"Writing file"<<std::endl;
+  }
+  outfile_TS1.close();
+
+  outfile_TS1.open("VData.txt", std::ios_base::app);
+  for(unsigned int i = 0;i<vecv.size();i++)
+  {
+    outfile_TS1<<std::setprecision(20)<<vecv[i]<< std::endl;
+    //std::cout<<"Writing file"<<std::endl;
+  }
+  outfile_TS1.close();
+
+
 
 
 

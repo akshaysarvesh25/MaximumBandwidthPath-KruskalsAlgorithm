@@ -10,10 +10,20 @@
 #include <iomanip>
 #include <fstream>
 #include<stack>
+#include <sys/time.h>
 
 using namespace std;
 
 #define OUTPUT_LOG 0
+
+long getMicrotime();
+
+long getMicrotime()
+{
+  struct timeval currentTime;
+  gettimeofday(&currentTime, NULL);
+  return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
+}
 
 typedef struct
 {
