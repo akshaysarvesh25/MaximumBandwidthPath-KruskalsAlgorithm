@@ -43,7 +43,7 @@ void Graph::DFSUtil(int v, bool visited[],int Dad[],int BW[])
     // Mark the current node as visited and
     // print it
     visited[v] = true;
-    cout << v << " ";
+    cout << v << "->";
 
     // Recur for all the vertices adjacent
     // to this vertex
@@ -85,7 +85,7 @@ void Graph::DFS(int v,int dest)
     int temp = dest;
     while(Dad[temp]!=-1)
     {
-      cout<<Dad[temp]<<"->";
+      //cout<<Dad[temp]<<endl;;
       temp = Dad[temp];
     }
 }

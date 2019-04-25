@@ -65,16 +65,8 @@ int main()
     }
   }
 
-  cout<<"Maximum edge : "<<Heap2->MaxEdge()<<" "<<Heap2->MaxEdge2()<<" "<<Heap2->MaxWeight()<<endl;
-
-  //DisjointSet *Set1 = new DisjointSet[NUMBER_OF_VERTICES];
   DisjointSets ds(NUMBER_OF_VERTICES);
 
-  /* Run makeset on all nodes
-  for(unsigned int nodes = 0; nodes<NUMBER_OF_VERTICES;nodes++)
-  {
-    MakeSet(Set1[nodes]);
-  }*/
 
   Graph MaxSpTree(NUMBER_OF_VERTICES);
   std::vector<int> vecu,vecv;
@@ -90,33 +82,28 @@ int main()
     int set_v = ds.find(v);
     if (set_u != set_v)
     {
-            // Current edge will be in the MST
-            // so print it
+
             vecu.push_back(set_u);
             vecv.push_back(set_v);
-       //cout << u << " - " << v << endl;
+
        MaxSpTree.addEdge(u,v,weight);
 
-          // Update MST weight
-       //mst_wt += it->first;
+
       ds.merge(set_u, set_v);
     }
     Heap2->Delete(0);
   }
 
- MaxSpTree.DFS(68,1549);
- //MaxSpTree.DFS(68,4509);
- int dest = 99;
- int src = 0;
- //while(ds.parent[dest]!=src)
+  int dest = 1549;
+  int src = 68;
+ MaxSpTree.DFS(src,dest);
+cout<<endl;
  long time2 = getMicrotime();
  cout<<"Total execution time : "<<(time2-time1)*1e-6<<endl;
 
-   //dest = ds.parent[dest];
 
- //}
 
- std::remove("UData.txt");
+  std::remove("UData.txt");
   std::remove("VData.txt");
   std::ofstream outfile_TS1;
 
@@ -124,7 +111,6 @@ int main()
   for(unsigned int i = 0;i<vecu.size();i++)
   {
     outfile_TS1<<std::setprecision(20)<<vecu[i]<< std::endl;
-    //std::cout<<"Writing file"<<std::endl;
   }
   outfile_TS1.close();
 
